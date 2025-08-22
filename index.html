@@ -5,33 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Frases de Inglés Básico | Susan English</title>
   <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css">
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
 </head>
 <body>
-  <!-- HERO / BANNER -->
+  <!-- BANNER -->
   <section class="hero">
-    <div class="wrap hero__content">
-      <h1>Aprende inglés básico con Susan</h1>
-      <p>Frases A1–A2 con audio y traducción. Elige tu nivel para empezar.</p>
-      <div class="hero__actions">
-        <button class="btn btn-primary" id="go-a1">Nivel A1</button>
-        <button class="btn btn-outline" id="go-a2">Nivel A2</button>
+  <!-- Fondo de partículas -->
+  <div id="tsparticles"></div>
+
+  <div class="wrap hero__content">
+    <div class="hero__top">
+      <img src="./img/logo.png" alt="Susan English Logo" class="hero__logo" />
+      <div class="hero__titlewrap">
+        <h1 class="hero__title">
+          <span class="title-gradient">Aprende inglés</span>
+          <span id="rotating-word">básico</span>
+          <span class="hero__flags">
+            <span class="flag-icon flag-icon-us" title="US English"></span>
+            <span class="flag-icon flag-icon-gb" title="British English"></span>
+          </span>
+        </h1>
+        <p class="hero__subtitle">
+          Frases A1–A2 con audio y traducción. Elige tu nivel para empezar.
+        </p>
       </div>
-      <div class="hero__theme">
-        <label for="themeSel">Tema:</label>
+    </div>
+
+    <div class="hero__actions">
+    <button class="btn btn-primary btn-toggle" id="go-a1">Nivel A1</button>
+<button class="btn btn-outline btn-toggle" id="go-a2">Nivel A2</button>
+
+      <div hidden ="hero__theme">
+        <label hidden for="themeSel">Tema:</label>
         <select id="themeSel" aria-label="Cambiar tema">
           <option value="dark">Oscuro</option>
           <option value="lightPurple">Claro morado</option>
         </select>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- FILTROS / LISTA -->
   <header class="wrap header">
     <p class="subtitle">A1–A2 · Aprende con audio y traducción</p>
     <div class="toolbar">
-      <input id="search" type="search" placeholder="Buscar: hi, price, excuse me…" aria-label="Buscar frase">
-      <select id="level">
+      <input id="search" type="search" placeholder="Buscar: hi, excuse me…" aria-label="Buscar frase">
+      <select hidden id="level">
         <option value="">Todos los niveles</option>
         <option value="A1">A1</option>
         <option value="A2">A2</option>
@@ -56,10 +78,16 @@
   </main>
 
   <footer class="wrap footer">
-    <small>© 2025 Susan English · Practica más en mi TikTok 💡</small>
-  </footer>
+  <small>
+    © 2025 Susan English · 
+    <a href="https://www.tiktok.com/@susanenglishclub" target="_blank" rel="noopener noreferrer">
+      Practica más en mi TikTok 💡
+    </a>
+  </small>
+</footer>
 
-  <script src="./js/theme-toggle.js" defer></script>
+
+  <script src="./js/hero.js" defer></script>
   <script src="./js/app.js" defer></script>
 </body>
 </html>

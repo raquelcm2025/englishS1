@@ -1,3 +1,4 @@
+// ---------- elementos ----------
 const $ = s => document.querySelector(s);
 const listEl  = $('#list');
 const levelEl = $('#level');
@@ -6,44 +7,54 @@ const searchEl= $('#search');
 const statsEl = $('#stats');
 const clearBtn= $('#clear');
 
-const goA1 = $('#go-a1');
-const goA2 = $('#go-a2');
+const btnA1 = document.getElementById('go-a1');
+const btnA2 = document.getElementById('go-a2');
 
-const FAV_KEY = 'phrases_favs_v1';
-const favs = new Set(JSON.parse(localStorage.getItem(FAV_KEY) || '[]'));
 let PHRASES = [];
 
+// ---------- data ----------
 async function loadData(){
-  const res = await fetch('./data/phrases.json');
-  PHRASES = await res.json();
-  render();
+  try{
+    const res = await fetch('./data/phrases.json');
+    PHRASES = await res.json();
+    render();
+    syncHeroBtns();
+  }catch(e){
+    statsEl.textContent = 'No se pudo cargar data/phrases.json';
+    console.error(e);
+  }
 }
 
-function speak(text){
-  if (!('speechSynthesis' in window)) return alert('Tu navegador no soporta TTS.');
+// ---------- TTS ----------
+function speak(text, slow=false){
+  if (!('speechSynthesis' in window)) return alert('Tu navegador no soporta audio.');
   const u = new SpeechSynthesisUtterance(text);
-  const en = speechSynthesis.getVoices().find(v=>v.lang.toLowerCase().startsWith('en'));
-  if (en) u.voice = en;
-  u.rate = 0.95;
-  speechSynthesis.cancel(); speechSynthesis.speak(u);
+  const voices = speechSynthesis.getVoices();
+  const enGB = voices.find(v=>v.lang.toLowerCase().startsWith('en-gb'));
+  const enUS = voices.find(v=>v.lang.toLowerCase().startsWith('en-us'));
+  u.voice = enGB || enUS || voices.find(v=>v.lang.toLowerCase().startsWith('en')) || null;
+  u.rate = slow ? 0.75 : 0.95;
+  u.pitch = 1.0;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
 }
 
+// ---------- tarjeta ----------
 function card(p){
-  const isFav = favs.has(p.id);
   return `
   <li class="card" data-id="${p.id}">
     <span class="badge">${p.level} • ${p.topic}</span>
     <div class="phrase">${p.en}</div>
     <div class="trans">${p.es}</div>
-    ${p.slow ? `<details><summary>Versión lenta</summary><div class="trans">${p.slow}</div></details>` : ''}
+    ${p.slow ? `<details><summary>Versión lenta (texto)</summary><div class="trans">${p.slow}</div></details>` : ''}
     <div class="actions">
       <button class="speak">🔊 Escuchar</button>
-      <button class="fav ${isFav ? 'active':''}">★ Favorito</button>
-      <button class="copy">📋 Copiar</button>
+      <button class="speak-slow">🐢 Escuchar lento</button>
     </div>
   </li>`;
 }
 
+// ---------- render ----------
 function render(){
   const q = (searchEl.value||'').toLowerCase().trim();
   const level = levelEl.value;
@@ -56,42 +67,50 @@ function render(){
     return [p.en,p.es,p.topic].some(s=>s.toLowerCase().includes(q));
   });
 
-  // si hay un nivel seleccionado, limita a 10 frases
-  const limited = level ? rows.slice(0,10) : rows;
-  statsEl.textContent = `${limited.length}${level?'/10 ': ' '}frases encontradas${level?' (mostrando 10 máx.)':''}`;
+  // si hay nivel, muestra máx 12
+  const limited = level ? rows.slice(0,12) : rows;
+  statsEl.textContent = `${limited.length}${level?'/12 ': ' '}frases encontradas${level?' (mostrando 12 máx.)':''}`;
   listEl.innerHTML = limited.map(card).join('');
 }
 
-function handleListClick(e){
+// ---------- eventos ----------
+listEl.addEventListener('click', (e)=>{
   const li = e.target.closest('li.card'); if(!li) return;
   const id = Number(li.dataset.id);
   const p = PHRASES.find(x=>x.id===id); if(!p) return;
 
-  if (e.target.classList.contains('speak')) speak(p.en);
-  if (e.target.classList.contains('fav')){
-    favs.has(id) ? favs.delete(id) : favs.add(id);
-    localStorage.setItem(FAV_KEY, JSON.stringify([...favs]));
-    render();
-  }
-  if (e.target.classList.contains('copy')){
-    navigator.clipboard.writeText(`${p.en} — ${p.es}`);
-    e.target.textContent='✅ Copiado'; setTimeout(()=>e.target.textContent='📋 Copiar',900);
-  }
-}
+  if (e.target.classList.contains('speak'))      speak(p.en, false);
+  if (e.target.classList.contains('speak-slow')) speak(p.en, true);
+});
 
 ['input','change'].forEach(ev=>{
   searchEl.addEventListener(ev, render);
-  levelEl.addEventListener(ev, render);
-  topicEl.addEventListener(ev, render);
+  levelEl.addEventListener(ev,  ()=>{ render(); syncHeroBtns(); });
+  topicEl.addEventListener(ev,  render);
 });
 clearBtn.addEventListener('click', ()=>{
   searchEl.value=''; levelEl.value=''; topicEl.value='';
-  render();
+  render(); syncHeroBtns();
 });
-listEl.addEventListener('click', handleListClick);
 
-// botones del banner
-goA1?.addEventListener('click', ()=>{ levelEl.value='A1'; window.scrollTo({top:document.body.scrollHeight*0.18,behavior:'smooth'}); render(); });
-goA2?.addEventListener('click', ()=>{ levelEl.value='A2'; window.scrollTo({top:document.body.scrollHeight*0.18,behavior:'smooth'}); render(); });
+// ---------- botones del hero ----------
+function syncHeroBtns(){
+  btnA1?.classList.remove('active');
+  btnA2?.classList.remove('active');
+  if (levelEl.value==='A1') btnA1?.classList.add('active');
+  if (levelEl.value==='A2') btnA2?.classList.add('active');
+}
+function setLevel(lvl){
+  levelEl.value = lvl;
+  render(); syncHeroBtns();
+  const contentTop = document.querySelector('.header')?.offsetTop || 0;
+  window.scrollTo({ top: contentTop, behavior: 'smooth' });
+}
+btnA1?.addEventListener('click', ()=> setLevel('A1'));
+btnA2?.addEventListener('click', ()=> setLevel('A2'));
 
-window.addEventListener('load', ()=>{ if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=()=>{}; loadData(); });
+// ---------- inicio ----------
+window.addEventListener('load', ()=>{
+  if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = ()=>{};
+  loadData();
+});
