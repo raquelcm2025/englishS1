@@ -1,0 +1,45 @@
+[
+  {
+    "id": 1,
+    "level": "A1",
+    "topic": "Saludos",
+    "en": "Hi! How are you?",
+    "es": "¡Hola! ¿Cómo estás?",
+    "slow": "Hi. How. are. you?"
+  },
+  {
+    "id": 2,
+    "level": "A1",
+    "topic": "Presentaciones",
+    "en": "My name is Susan.",
+    "es": "Mi nombre es Susan."
+  },
+  {
+    "id": 3,
+    "level": "A1",
+    "topic": "Compras",
+    "en": "How much is this?",
+    "es": "¿Cuánto cuesta esto?"
+  },
+  {
+    "id": 4,
+    "level": "A1",
+    "topic": "Direcciones",
+    "en": "Excuse me, where is the station?",
+    "es": "Disculpe, ¿dónde está la estación?"
+  },
+  {
+    "id": 5,
+    "level": "A2",
+    "topic": "Saludos",
+    "en": "Nice to meet you. I'm from Lima.",
+    "es": "Encantada. Soy de Lima."
+  },
+  {
+    "id": 6,
+    "level": "A2",
+    "topic": "Compras",
+    "en": "Do you accept cards?",
+    "es": "¿Acepta tarjetas?"
+  }
+]
