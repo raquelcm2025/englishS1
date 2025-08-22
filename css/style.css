@@ -1,31 +1,62 @@
 :root{
-  --bg:#0f0f12; --fg:#f3f6f9; --muted:#aab3c0; --card:#16181d; --accent:#ff2d75;
+  /* tema oscuro por defecto */
+  --bg:#0f0f12; --fg:#f3f6f9; --muted:#aab3c0; --card:#16181d; --line:#242732; --accent:#b26bff;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:var(--fg)}
 .wrap{max-width:980px;margin:auto;padding:16px}
-h1{font-size:clamp(1.6rem,2.5vw,2.2rem);margin:12px 0}
+h1{font-size:clamp(1.7rem,2.5vw,2.3rem);margin:12px 0}
 .subtitle{color:var(--muted);margin:0 0 8px 0}
+
+/* HERO / banner */
+.hero{background:
+  radial-gradient(1200px 600px at 10% -10%, rgba(178,107,255,.25), transparent 60%),
+  radial-gradient(900px 500px at 90% 0%, rgba(80,45,200,.25), transparent 60%),
+  linear-gradient(180deg, #12131a, #0f0f12);
+  border-bottom:1px solid #1f2230}
+.hero__content{display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding:28px 16px}
+.hero__actions{display:flex;gap:10px;margin-top:6px}
+.btn{border:1px solid var(--line);padding:10px 14px;border-radius:12px;cursor:pointer;background:#1b1e25;color:var(--fg)}
+.btn-primary{background:var(--accent);border-color:transparent;color:white;font-weight:700}
+.btn-outline{background:transparent}
+.hero__theme{margin-top:8px;color:var(--muted)}
+.hero__theme select{background:#121419;color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+
+.header{padding-top:8px}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .toolbar input,.toolbar select,.toolbar button{
-  background:#121419;color:var(--fg);border:1px solid #262a33;border-radius:10px;
-  padding:10px 12px
+  background:#121419;color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:10px 12px
 }
 .toolbar button{cursor:pointer}
+
 .cards{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;padding:0;margin:12px 0 32px}
-.card{
-  background:var(--card);border:1px solid #242732;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px
-}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px}
 .badge{font-size:.75rem;color:#cbd3df;background:#1f222a;border-radius:999px;padding:3px 10px;display:inline-block}
 .phrase{font-weight:800;font-size:1.05rem}
 .trans{color:var(--muted)}
 .actions{display:flex;gap:8px;margin-top:6px}
-.actions button{
-  background:#1b1e25;border:1px solid #2a2e39;color:var(--fg);
-  padding:8px 10px;border-radius:10px;cursor:pointer
-}
+.actions button{background:#1b1e25;border:1px solid var(--line);color:var(--fg);padding:8px 10px;border-radius:10px;cursor:pointer}
 .actions button.fav.active{border-color:var(--accent);color:var(--accent)}
 .footer{border-top:1px solid #22252f;color:#8f97a5}
 a{color:#8ab4ff;text-decoration:none}
 details{background:#151820;border:1px solid #252a35;border-radius:10px;padding:6px 10px}
 summary{cursor:pointer}
+
+/* === TEMA CLARO MORADO === */
+:root[data-theme="lightPurple"]{
+  --bg:#faf6ff; --fg:#1a1030; --muted:#5f4a86; --card:#ffffff; --line:#e6ddff; --accent:#7a3cff;
+}
+:root[data-theme="lightPurple"] .hero{
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(122,60,255,.18), transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, rgba(180,120,255,.18), transparent 60%),
+    linear-gradient(180deg, #f4eeff, #faf6ff);
+  border-bottom:1px solid var(--line);
+}
+:root[data-theme="lightPurple"] .btn{background:#fff;border-color:var(--line);color:var(--fg)}
+:root[data-theme="lightPurple"] .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+:root[data-theme="lightPurple"] .toolbar input,
+:root[data-theme="lightPurple"] .toolbar select,
+:root[data-theme="lightPurple"] .toolbar button{background:#fff;border-color:var(--line);color:var(--fg)}
+:root[data-theme="lightPurple"] .card{background:#fff;border-color:var(--line)}
+:root[data-theme="lightPurple"] details{background:#fbf8ff;border-color:var(--line)}

@@ -1,45 +1,23 @@
 [
-  {
-    "id": 1,
-    "level": "A1",
-    "topic": "Saludos",
-    "en": "Hi! How are you?",
-    "es": "¡Hola! ¿Cómo estás?",
-    "slow": "Hi. How. are. you?"
-  },
-  {
-    "id": 2,
-    "level": "A1",
-    "topic": "Presentaciones",
-    "en": "My name is Susan.",
-    "es": "Mi nombre es Susan."
-  },
-  {
-    "id": 3,
-    "level": "A1",
-    "topic": "Compras",
-    "en": "How much is this?",
-    "es": "¿Cuánto cuesta esto?"
-  },
-  {
-    "id": 4,
-    "level": "A1",
-    "topic": "Direcciones",
-    "en": "Excuse me, where is the station?",
-    "es": "Disculpe, ¿dónde está la estación?"
-  },
-  {
-    "id": 5,
-    "level": "A2",
-    "topic": "Saludos",
-    "en": "Nice to meet you. I'm from Lima.",
-    "es": "Encantada. Soy de Lima."
-  },
-  {
-    "id": 6,
-    "level": "A2",
-    "topic": "Compras",
-    "en": "Do you accept cards?",
-    "es": "¿Acepta tarjetas?"
-  }
+  { "id": 1, "level": "A1", "topic": "Saludos", "en": "Hi! How are you?", "es": "¡Hola! ¿Cómo estás?", "slow": "Hi. How. are. you?" },
+  { "id": 2, "level": "A1", "topic": "Presentaciones", "en": "My name is Susan.", "es": "Mi nombre es Susan." },
+  { "id": 3, "level": "A1", "topic": "Compras", "en": "How much is this?", "es": "¿Cuánto cuesta esto?" },
+  { "id": 4, "level": "A1", "topic": "Direcciones", "en": "Excuse me, where is the station?", "es": "Disculpe, ¿dónde está la estación?" },
+  { "id": 5, "level": "A1", "topic": "Saludos", "en": "Good morning!", "es": "¡Buenos días!" },
+  { "id": 6, "level": "A1", "topic": "Presentaciones", "en": "Nice to meet you.", "es": "Encantado/a de conocerte." },
+  { "id": 7, "level": "A1", "topic": "Transporte", "en": "I need a taxi.", "es": "Necesito un taxi." },
+  { "id": 8, "level": "A1", "topic": "Restaurante", "en": "A table for two, please.", "es": "Una mesa para dos, por favor." },
+  { "id": 9, "level": "A1", "topic": "Direcciones", "en": "Turn left. Turn right.", "es": "Gira a la izquierda. Gira a la derecha." },
+  { "id": 10,"level": "A1", "topic": "Compras", "en": "Do you have this in medium?", "es": "¿Tiene esto en talla mediana?" },
+
+  { "id": 11,"level": "A2", "topic": "Saludos", "en": "Nice to meet you. I'm from Lima.", "es": "Encantada. Soy de Lima." },
+  { "id": 12,"level": "A2", "topic": "Compras", "en": "Do you accept cards?", "es": "¿Acepta tarjetas?" },
+  { "id": 13,"level": "A2", "topic": "Restaurante", "en": "Could I see the menu, please?", "es": "¿Podría ver el menú, por favor?" },
+  { "id": 14,"level": "A2", "topic": "Tiempo Libre", "en": "What do you do in your free time?", "es": "¿Qué haces en tu tiempo libre?" },
+  { "id": 15,"level": "A2", "topic": "Transporte", "en": "How long does the bus take?", "es": "¿Cuánto tarda el bus?" },
+  { "id": 16,"level": "A2", "topic": "Direcciones", "en": "Is it far from here?", "es": "¿Está lejos de aquí?" },
+  { "id": 17,"level": "A2", "topic": "Presentaciones", "en": "I'm studying Computer Science.", "es": "Estoy estudiando Computación." },
+  { "id": 18,"level": "A2", "topic": "Restaurante", "en": "I'm allergic to peanuts.", "es": "Soy alérgico/a al maní." },
+  { "id": 19,"level": "A2", "topic": "Compras", "en": "Could you give me a discount?", "es": "¿Podría darme un descuento?" },
+  { "id": 20,"level": "A2", "topic": "Tiempo Libre", "en": "I prefer reading to watching TV.", "es": "Prefiero leer que ver televisión." }
 ]

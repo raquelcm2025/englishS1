@@ -7,11 +7,28 @@
   <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-  <header class="wrap">
-    <h1>Frases de Inglés Básico</h1>
-    <p class="subtitle">A1–A2 · Aprende con audio y traducción</p>
+  <!-- HERO / BANNER -->
+  <section class="hero">
+    <div class="wrap hero__content">
+      <h1>Aprende inglés básico con Susan</h1>
+      <p>Frases A1–A2 con audio y traducción. Elige tu nivel para empezar.</p>
+      <div class="hero__actions">
+        <button class="btn btn-primary" id="go-a1">Nivel A1</button>
+        <button class="btn btn-outline" id="go-a2">Nivel A2</button>
+      </div>
+      <div class="hero__theme">
+        <label for="themeSel">Tema:</label>
+        <select id="themeSel" aria-label="Cambiar tema">
+          <option value="dark">Oscuro</option>
+          <option value="lightPurple">Claro morado</option>
+        </select>
+      </div>
+    </div>
+  </section>
 
-    <!-- Barra de búsqueda -->
+  <!-- FILTROS / LISTA -->
+  <header class="wrap header">
+    <p class="subtitle">A1–A2 · Aprende con audio y traducción</p>
     <div class="toolbar">
       <input id="search" type="search" placeholder="Buscar: hi, price, excuse me…" aria-label="Buscar frase">
       <select id="level">
@@ -25,9 +42,11 @@
         <option value="Presentaciones">Presentaciones</option>
         <option value="Compras">Compras</option>
         <option value="Direcciones">Direcciones</option>
+        <option value="Restaurante">Restaurante</option>
+        <option value="Tiempo Libre">Tiempo Libre</option>
+        <option value="Transporte">Transporte</option>
       </select>
       <button id="clear">Limpiar</button>
-      <button id="toggle-theme" title="Tema">🌓</button>
     </div>
   </header>
 
