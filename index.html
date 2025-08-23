@@ -5,24 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Frases de Inglés Básico | Susan English Club</title>
 
-  <!-- CSS principal -->
   <link rel="stylesheet" href="./css/style.css" />
-
-  <!-- Banderas e iconografía -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css" />
 
-  <!-- Partículas hero -->
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <!--  CDN partículas -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js" defer></script>
+  <script src="./js/app.js" defer></script>
 </head>
 <body>
+  <div id="bgparticles" aria-hidden="true"></div>
+
   <!-- HERO -->
   <section class="hero" aria-label="Banner principal">
-    <div id="tsparticles" aria-hidden="true"></div>
-
     <div class="wrap hero__content">
       <div class="hero__top">
-        <img src="./img/logo.png" alt="Logotipo Susan English Club" class="hero__logo" />
-
+        <a href="https://www.tiktok.com/@susanenglishclub" target="_blank" rel="noopener noreferrer" class="cta-link">          <img src="./img/logo.png" alt="Logotipo Susan English Club" class="hero__logo" />
+ </a>
         <div class="hero__titlewrap">
           <h1 class="hero__title">
             <span class="title-gradient">Aprende inglés</span>
@@ -39,6 +37,9 @@
       <div class="hero__actions" role="group" aria-label="Selector de nivel">
         <button class="btn btn-primary btn-toggle" id="go-a1" aria-controls="results-panel">Nivel A1</button>
         <button class="btn btn-outline btn-toggle" id="go-a2" aria-controls="results-panel">Nivel A2</button>
+        <select id="topic-hero" class="topic-hero" aria-label="Selecciona una categoría" disabled>
+          <option value="">Selecciona una categoría…</option>
+        </select>
       </div>
     </div>
   </section>
@@ -50,12 +51,10 @@
     </svg>
   </div>
 
-  <!-- CONTENIDO PRINCIPAL -->
+  <!-- Imagen y resultados -->
   <section class="level-area" id="level-area">
     <img src="./img/A1A2.png" alt="Niveles Cambridge A1 y A2" class="level-img" />
-
-    <!-- Panel de resultados (invisible hasta elegir nivel) -->
-    <section id="results-panel" class="level-results is-hidden" aria-live="polite">
+    <section id="results-panel" class="level-results is-hidden">
       <h2 id="stats" class="visually-hidden"></h2>
       <div class="toolbar is-hidden" id="filters">
         <input type="search" id="search" placeholder="Buscar frase..." aria-label="Buscar frase" />
@@ -64,11 +63,11 @@
         </select>
         <button id="clear" type="button">Limpiar</button>
       </div>
-
       <ul id="list" class="cards" aria-label="Listado de frases"></ul>
+
     </section>
   </section>
-  <!-- FOOTER -->
+
   <footer class="footer-cta">
     <div class="wrap">
       <p class="cta-text">💡 ¿Quieres más frases en inglés?</p>
@@ -78,7 +77,5 @@
       <small>© 2025 Susan English Club</small>
     </div>
   </footer>
-
-  <script src="./js/app.js" defer></script>
 </body>
 </html>
