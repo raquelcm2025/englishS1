@@ -135,10 +135,18 @@ body > *:not(#bgparticles){ position:relative; z-index:1; }
 /* ===== UTIL ===== */
 .visually-hidden{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0 }
 
-@media (max-width:540px){
+/* @media (max-width:540px){
   .hero__logo{ width:80px; height:80px }
   .cards{ grid-template-columns:repeat(auto-fill,minmax(240px,1fr)) }
+} */ 
+
+@media (max-width: 768px) {
+  .tabs button {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
 }
+
 
 /* ===== Selector de categoría en el hero ===== */
 .topic-hero{
@@ -181,3 +189,20 @@ body > *:not(#bgparticles){ position:relative; z-index:1; }
   pointer-events:none;
 }
 
+/* Para que las pestañas se adapten */
+.tabs {
+  display: flex;
+  flex-wrap: nowrap;    
+  overflow-x: auto;     
+  scrollbar-width: none; 
+}
+.tabs::-webkit-scrollbar {
+  display: none; 
+}
+
+/* Botones/tab responsivos */
+.tabs button {
+  flex: 1 0 auto;      
+  min-width: 120px;     
+  font-size: 0.9rem;    
+}
