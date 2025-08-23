@@ -1,116 +1,199 @@
-// ---------- elementos ----------
-const $ = s => document.querySelector(s);
-const listEl  = $('#list');
-const levelEl = $('#level');
-const topicEl = $('#topic');
-const searchEl= $('#search');
-const statsEl = $('#stats');
-const clearBtn= $('#clear');
+/* =========================================================
+   Susan English Club – App JS (adaptado a phrases.json)
+   ========================================================= */
 
-const btnA1 = document.getElementById('go-a1');
-const btnA2 = document.getElementById('go-a2');
+/* ---------- Helpers ---------- */
+const $ = (s) => document.querySelector(s);
 
+/* ---------- DOM ---------- */
+const btnA1        = $('#go-a1');
+const btnA2        = $('#go-a2');
+
+const levelArea    = $('#level-area');
+const resultsPanel = $('#results-panel');   // overlay
+const listEl       = $('#list');
+const statsEl      = $('#stats');
+
+// Filtros opcionales (si no existen, no pasa nada)
+const searchEl     = $('#search');
+const topicEl      = $('#topic');
+const clearBtn     = $('#clear');
+
+/* ---------- Estado ---------- */
 let PHRASES = [];
+let currentLevel = '';   // 'A1' | 'A2'
 
-// ---------- data ----------
-async function loadData(){
-  try{
-    const res = await fetch('./data/phrases.json');
+/* ---------- Data ---------- */
+async function ensureData() {
+  if (PHRASES.length) return;  // ya cargado
+
+  try {
+    const res = await fetch('./data/phrases.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     PHRASES = await res.json();
-    render();
-    syncHeroBtns();
-  }catch(e){
-    statsEl.textContent = 'No se pudo cargar data/phrases.json';
-    console.error(e);
+    buildTopics();
+  } catch (err) {
+    console.error('Error cargando phrases.json:', err);
+    if (statsEl) statsEl.textContent = 'No se pudo cargar data/phrases.json';
   }
 }
 
-// ---------- TTS ----------
-function speak(text, slow=false){
-  if (!('speechSynthesis' in window)) return alert('Tu navegador no soporta audio.');
+function buildTopics() {
+  if (!topicEl) return;
+  const topics = [...new Set(PHRASES.map(p => p.topic))].sort();
+  topicEl.innerHTML = `<option value="">Todos los temas</option>` +
+    topics.map(t => `<option value="${t}">${t}</option>`).join('');
+}
+
+/* ---------- TTS ---------- */
+function speakEN(text) {
+  if (!('speechSynthesis' in window)) return;
   const u = new SpeechSynthesisUtterance(text);
-  const voices = speechSynthesis.getVoices();
-  const enGB = voices.find(v=>v.lang.toLowerCase().startsWith('en-gb'));
-  const enUS = voices.find(v=>v.lang.toLowerCase().startsWith('en-us'));
-  u.voice = enGB || enUS || voices.find(v=>v.lang.toLowerCase().startsWith('en')) || null;
-  u.rate = slow ? 0.75 : 0.95;
-  u.pitch = 1.0;
+  const v = speechSynthesis.getVoices();
+  u.voice = v.find(x => x.lang.toLowerCase().startsWith('en-us'))
+          || v.find(x => x.lang.toLowerCase().startsWith('en'))
+          || null;
+  u.rate = 0.98;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+function speakES(text) {
+  if (!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  const v = speechSynthesis.getVoices();
+  u.voice = v.find(x => x.lang.toLowerCase().startsWith('es-'))
+          || v.find(x => x.lang.toLowerCase().startsWith('es'))
+          || null;
+  u.rate = 1.0;
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
 
-// ---------- tarjeta ----------
-function card(p){
+/* ---------- Tarjeta ---------- */
+function card(p) {
   return `
-  <li class="card" data-id="${p.id}">
-    <span class="badge">${p.level} • ${p.topic}</span>
-    <div class="phrase">${p.en}</div>
-    <div class="trans">${p.es}</div>
-    ${p.slow ? `<details><summary>Versión lenta (texto)</summary><div class="trans">${p.slow}</div></details>` : ''}
-    <div class="actions">
-      <button class="speak">🔊 Escuchar</button>
-      <button class="speak-slow">🐢 Escuchar lento</button>
-    </div>
-  </li>`;
+    <li class="card" data-id="${p.id}">
+      <span class="badge">${p.level} • ${p.topic}</span>
+      <div class="phrase">${p.en}</div>
+      <div class="trans">${p.es}</div>
+      <div class="actions">
+        <button class="listen-en" type="button">🔊 Listen</button>
+        <button class="listen-es" type="button">🎧 Escuchar</button>
+      </div>
+    </li>`;
 }
 
-// ---------- render ----------
-function render(){
-  const q = (searchEl.value||'').toLowerCase().trim();
-  const level = levelEl.value;
-  const topic = topicEl.value;
+/* ---------- Render ---------- */
+function render() {
+  if (!currentLevel) {
+    if (statsEl) statsEl.textContent = '';
+    if (listEl) listEl.innerHTML = '';
+    return;
+  }
 
-  let rows = PHRASES.filter(p=>{
-    if (level && p.level!==level) return false;
-    if (topic && p.topic!==topic) return false;
+  const q     = (searchEl?.value || '').toLowerCase().trim();
+  const topic = (topicEl?.value || '').trim();
+
+  let rows = PHRASES.filter(p => {
+    if (p.level !== currentLevel) return false;
+    if (topic && p.topic !== topic) return false;
     if (!q) return true;
-    return [p.en,p.es,p.topic].some(s=>s.toLowerCase().includes(q));
+    return [p.en, p.es, p.topic].some(s => s.toLowerCase().includes(q));
   });
 
-  // si hay nivel, muestra máx 12
-  const limited = level ? rows.slice(0,12) : rows;
-  statsEl.textContent = `${limited.length}${level?'/12 ': ' '}frases encontradas${level?' (mostrando 12 máx.)':''}`;
-  listEl.innerHTML = limited.map(card).join('');
+  const limited = rows.slice(0, 12);   // hasta 12 frases
+  if (statsEl) statsEl.textContent = `${limited.length}/12 frases (máx. 12)`;
+  if (listEl)  listEl.innerHTML = limited.map(card).join('');
 }
 
-// ---------- eventos ----------
-listEl.addEventListener('click', (e)=>{
-  const li = e.target.closest('li.card'); if(!li) return;
+/* ---------- Clicks en tarjetas ---------- */
+listEl?.addEventListener('click', (e) => {
+  const li = e.target.closest('li.card'); if (!li) return;
   const id = Number(li.dataset.id);
-  const p = PHRASES.find(x=>x.id===id); if(!p) return;
+  const p  = PHRASES.find(x => x.id === id); if (!p) return;
 
-  if (e.target.classList.contains('speak'))      speak(p.en, false);
-  if (e.target.classList.contains('speak-slow')) speak(p.en, true);
+  if (e.target.classList.contains('listen-en')) speakEN(p.en);
+  if (e.target.classList.contains('listen-es')) speakES(p.es);
 });
 
-['input','change'].forEach(ev=>{
-  searchEl.addEventListener(ev, render);
-  levelEl.addEventListener(ev,  ()=>{ render(); syncHeroBtns(); });
-  topicEl.addEventListener(ev,  render);
-});
-clearBtn.addEventListener('click', ()=>{
-  searchEl.value=''; levelEl.value=''; topicEl.value='';
-  render(); syncHeroBtns();
+/* ---------- Filtros ---------- */
+if (searchEl) ['input','change'].forEach(ev => searchEl.addEventListener(ev, render));
+if (topicEl)  topicEl.addEventListener('change', render);
+if (clearBtn) clearBtn.addEventListener('click', () => {
+  if (searchEl) searchEl.value = '';
+  if (topicEl)  topicEl.value  = '';
+  render();
 });
 
-// ---------- botones del hero ----------
-function syncHeroBtns(){
+/* ---------- Nivel ---------- */
+function syncHeroBtns() {
   btnA1?.classList.remove('active');
   btnA2?.classList.remove('active');
-  if (levelEl.value==='A1') btnA1?.classList.add('active');
-  if (levelEl.value==='A2') btnA2?.classList.add('active');
+  if (currentLevel === 'A1') btnA1?.classList.add('active');
+  if (currentLevel === 'A2') btnA2?.classList.add('active');
 }
-function setLevel(lvl){
-  levelEl.value = lvl;
-  render(); syncHeroBtns();
-  const contentTop = document.querySelector('.header')?.offsetTop || 0;
-  window.scrollTo({ top: contentTop, behavior: 'smooth' });
-}
-btnA1?.addEventListener('click', ()=> setLevel('A1'));
-btnA2?.addEventListener('click', ()=> setLevel('A2'));
 
-// ---------- inicio ----------
-window.addEventListener('load', ()=>{
-  if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = ()=>{};
-  loadData();
+async function setLevel(lvl) {
+  await ensureData();
+  currentLevel = lvl;
+
+  resultsPanel?.classList.remove('is-hidden');
+
+  syncHeroBtns();
+  render();
+
+   document.getElementById('level-area')
+    ?.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+btnA1?.addEventListener('click', () => setLevel('A1'));
+btnA2?.addEventListener('click', () => setLevel('A2'));
+
+/* ---------- Hero: palabra rotativa ---------- */
+const words = ['básico', 'desde cero', 'paso a paso', 'con Susan'];
+const rot = $('#rotating-word');
+let idx = 0;
+function rotateWord() {
+  if (!rot) return;
+  idx = (idx + 1) % words.length;
+  rot.style.opacity = '0';
+  setTimeout(() => { rot.textContent = words[idx]; rot.style.opacity = '1'; }, 180);
+}
+setInterval(rotateWord, 2200);
+
+/* ---------- Partículas ---------- */
+(async () => {
+  const engine = window.tsParticles;
+  if (!engine) return;
+
+  const isMobile = matchMedia('(max-width:540px)').matches;
+
+  await engine.load({
+    id: 'tsparticles',
+    options: {
+      fpsLimit: 60,
+      fullScreen: { enable: false },
+      background: { color: 'transparent' },
+      particles: {
+        number: { value: isMobile ? 14 : 24, density: { enable: true, area: 800 } },
+        color: { value: ['#b26bff', '#6ee7ff'] },
+        opacity: { value: 0.25 },
+        size: { value: { min: 1, max: 3 } },
+        move: { enable: true, speed: 0.6, direction: 'none', outModes: 'out' },
+        links: { enable: true, color: '#bda9ff', distance: 120, opacity: 0.15, width: 1 }
+      },
+      detectRetina: true,
+      interactivity: {
+        events: { onHover: { enable: true, mode: 'repulse' }, resize: true },
+        modes: { repulse: { distance: 80, duration: 0.2 } }
+      }
+    }
+  });
+})();
+
+/* ---------- Init ---------- */
+window.addEventListener('load', () => {
+  if ('speechSynthesis' in window) {
+    try { speechSynthesis.onvoiceschanged = () => {}; } catch {}
+  }
 });
